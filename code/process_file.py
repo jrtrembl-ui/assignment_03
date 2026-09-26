@@ -22,19 +22,36 @@ Test it: pytest tests/test_streamlit.py -k process_file
 # Reference #4 and #5 cover the two things that are new here.
 
 # TODO: imports — streamlit, json, and what you need from packaging_parser.
-
+import streamlit as st
+import json
+from packaging_parser import parse_packaging, calc_total_units, get_unit
 
 # TODO: the title, exactly:   Process File of Packages
-
-
+st.title("Process File of Packages")
 # TODO: a file uploader, key="package_file". Like the text box in Part 1 it returns
 #       a value — None until a file has been chosen — so the same kind of guard
 #       goes around everything below.
-
+package_file = st.file_uploader(
+    "Upload package file:",
+    key="package_file"
+)
 
 # 1. Bytes to text. The upload is bytes; decode it, then split it into lines.
 # TODO
+if package_file:
+    text = package_file.getvalue().decode("utf-8")
+    lines = text.splitlines()
+    packages = []
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
 
+        package = parse_packaging(line)
+        packages.append(package)
+        total = calc_total_units(package)
+        unit = get_unit(package)
+        st.info(f"{line} ➡️ Total 📦 Size: {total} {unit}")
 
 # 2. Every line: strip it, SKIP IT IF IT IS BLANK, parse it, keep the parsed package
 #    in a list, and show the line with its total. Match this layout:
@@ -46,9 +63,13 @@ Test it: pytest tests/test_streamlit.py -k process_file
 # 3. Write the list of parsed packages to data/<name>.json with json.dump, where
 #    <name> is the uploaded file's name with .txt replaced by .json.
 # TODO
-
+    json_filename = package_file.name.replace(".txt", ".json")
+    json_path = f"data/{json_filename}"
+    with open(json_path, "w") as file:
+        json.dump(packages, file, indent=2)
 
 # 4. Say what happened, exactly:
 #
 #        3 packages written to data/packaging1.json
 # TODO
+    st.success(f"{len(packages)} packages written to {json_path}")

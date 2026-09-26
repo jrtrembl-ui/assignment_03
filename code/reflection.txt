@@ -1,6 +1,4 @@
-Write your reflection here.
-
-See reflection.md for what makes a good reflection — be specific, use the
-terminology from this assignment (rerun, widget, return value, guard, bytes vs.
-text, decode, session state, initialise once, button-triggered, metric), and make
-it actionable.
+This assignment helped me understand how Streamlit reruns and why guards and session state are important. 
+I also learned how to decode bytes into text and use a button to control when something runs. 
+The metric widgets helped me see that my session state was working. 
+Next time, I would test each part as I go so mistakes are easier to find.
